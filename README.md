@@ -1,5 +1,5 @@
 # SolarTrack IoT
-SolarTrack IoT es un sistema de seguimiento solar inteligente desarrollado como proyecto académico en la Universidad de Guadalajara.  
+SolarTrack IoT es un sistema de seguimiento solar inteligente desarrollado como proyecto académico.  
 Combina hardware (ESP32/Arduino, sensores y servomotores) con un dashboard web conectado vía MQTT para monitorear en tiempo real la producción energética y la eficiencia de un panel solar.
 
 ## Características principales
