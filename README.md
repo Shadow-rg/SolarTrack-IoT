@@ -45,14 +45,14 @@ Además del hardware electrónico, el circuito fue montado con materiales práct
 - Cautín y soldadura para las conexiones eléctricas.  
 - **Policarbonato solar** (plástico especial resistente a radiación UV) utilizado en los postes que sostienen el panel y los sensores LDR.
 - Puedes usar cualquier material de tu elección, ya sea como en nuestro caso madre, puede ser plástico, metal, cartón o hasta impresiones 3d, solo considera el peso y la resistencia al sol.
-### Circuito simplificado
+### Circuito
 ![Circuito](Circuito.jpeg)
 
 ## Diagrama del circuito
 ### Arduino con todos los componentes (sin ESP32)
 ![Circuito Arduino SolarTrack](circuito_arduino_solartrack.jpeg)
 
-### Arduino + placa de expansión (con ESP32)
+### Arduino más placa de expansión (con ESP32)
 ![Circuito Arduino + ESP32](circuito_arduino_esp32.jpeg)
 
 ## Ejecución y funcionamiento del sistema
@@ -83,7 +83,7 @@ El circuito se comporta de manera integrada y autónoma:
    - El sistema puede alimentar y cargar pequeños dispositivos electrónicos como **teléfonos móviles, smartwatches, sensores portátiles o gadgets IoT**.  
    - Esto convierte al circuito en una solución práctica para aplicaciones de energía autónoma en campo.  
 
-👉 En conjunto, el sistema **carga, regula, mide, registra y transmite** todo el flujo energético, mostrando en el dashboard un monitoreo confiable y en tiempo real.
+En conjunto, el sistema **carga, regula, mide, registra y transmite** todo el flujo energético, mostrando en el dashboard un monitoreo confiable y en tiempo real.
 
 ## Licencia
 Este proyecto está bajo la licencia MIT. Puedes usarlo, modificarlo y compartirlo libremente.
