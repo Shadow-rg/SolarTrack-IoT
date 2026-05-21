@@ -35,7 +35,11 @@ Combina hardware (ESP32/Arduino, sensores y servomotores) con un dashboard web c
 - Porta pilas 18650 3 pilas 
 
 ## Diagrama del circuito
+### Arduino con todos los componentes (sin ESP32)
+![Circuito Arduino SolarTrack](docs/circuito_arduino_solartrack.jpeg)
 
+### Arduino + placa de expansión (con ESP32)
+![Circuito Arduino + ESP32](docs/circuito_arduino_esp32.jpeg)
 
 ## Ejecución
 1. **Microcontrolador**: cargar arduino.ino en el ESP32/Arduino.  
