@@ -32,19 +32,58 @@ Combina hardware (ESP32/Arduino, sensores y servomotores) con un dashboard web c
 - 2 metros de cable eléctrico 22 AWG Rojo PVC
 - 2 Juegos de Cables dupont largos 20cm
 - Conector USB Hembra Tipo A 4 pines
-- Porta pilas 18650 3 pilas 
+- Porta pilas 18650 3 pilas
+### Imagen del circuito
+![Imagen del circuito](Imagen%20del%20circuito.jpeg)
+
+## Materiales de construcción
+Además del hardware electrónico, el circuito fue montado con materiales prácticos y resistentes:
+- Madera como base estructural.  
+- Barniz UV para proteger la superficie contra la intemperie.  
+- Tornillos y soportes metálicos para fijar componentes.  
+- Silicón caliente para aislamiento y fijación rápida.  
+- Cautín y soldadura para las conexiones eléctricas.  
+- **Policarbonato solar** (plástico especial resistente a radiación UV) utilizado en los postes que sostienen el panel y los sensores LDR.
+- Puedes usar cualquier material de tu elección, ya sea como en nuestro caso madre, puede ser plástico, metal, cartón o hasta impresiones 3d, solo considera el peso y la resistencia al sol.
+### Circuito simplificado
+![Circuito](Circuito.jpeg)
 
 ## Diagrama del circuito
 ### Arduino con todos los componentes (sin ESP32)
-![Circuito Arduino SolarTrack](docs/circuito_arduino_solartrack.jpeg)
+![Circuito Arduino SolarTrack](circuito_arduino_solartrack.jpeg)
 
 ### Arduino + placa de expansión (con ESP32)
-![Circuito Arduino + ESP32](docs/circuito_arduino_esp32.jpeg)
+![Circuito Arduino + ESP32](circuito_arduino_esp32.jpeg)
 
-## Ejecución
-1. **Microcontrolador**: cargar arduino.ino en el ESP32/Arduino.  
-2. **Servidor/Dashboard**: abrir web/index.html para login y web/dashboard.html para monitoreo.  
-3. **MQTT Broker**: configurar en el código del ESP32 el broker (ej. HiveMQ, Mosquitto).  
+## Ejecución y funcionamiento del sistema
+El circuito se comporta de manera integrada y autónoma:
+
+1. **Carga y alimentación**  
+   - El panel solar genera energía y carga la batería a través del módulo de gestión.  
+   - El sistema puede operar incluso con variaciones de luz gracias al almacenamiento.  
+
+2. **Seguimiento solar**  
+   - Los sensores LDR detectan la intensidad de luz en diferentes direcciones.  
+   - Los servomotores ajustan la posición del panel en dos ejes para maximizar la captación.  
+
+3. **Medición y registro**  
+   - El sensor ACS712 mide la corriente generada.  
+   - La pantalla LCD muestra en tiempo real los valores de energía y estado del sistema.  
+
+4. **Comunicación IoT**  
+   - El Arduino gestiona el control del circuito.  
+   - El ESP32 se encarga de la conexión WiFi y el envío de datos vía MQTT.  
+   - Los datos se transmiten al dashboard web, donde se registran métricas, gráficas y se pueden     exportar en CSV.  
+
+5. **Sincronización inteligente**  
+   - Si el dispositivo pierde conexión, almacena los datos localmente.  
+   - Al recuperar internet, sincroniza automáticamente con el servidor para no perder información.
+
+ 6. **Carga de dispositivos externos**  
+   - El sistema puede alimentar y cargar pequeños dispositivos electrónicos como **teléfonos móviles, smartwatches, sensores portátiles o gadgets IoT**.  
+   - Esto convierte al circuito en una solución práctica para aplicaciones de energía autónoma en campo.  
+
+👉 En conjunto, el sistema **carga, regula, mide, registra y transmite** todo el flujo energético, mostrando en el dashboard un monitoreo confiable y en tiempo real.
 
 ## Licencia
 Este proyecto está bajo la licencia MIT. Puedes usarlo, modificarlo y compartirlo libremente.
