@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarTrack Dashboard</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Iconos FontAwesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Librerías para gráficas y exportación -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+  <!-- Librería MQTT (Paho) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt-min.js"></script>
+
+  <style>
+    body {
+      background: #050816;
+      color: white;
+    }
+
+    .sidebar {
+      background: #081120;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card:hover {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    }
+
+    .metric-animate {
+      animation: pulseMetric 1s ease;
+    }
+
+    @keyframes pulseMetric {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex min-h-screen">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar w-72 p-6 hidden md:flex flex-col justify-between">
+      <div>
+        <h1 class="text-4xl font-bold text-cyan-400">SolarTrack</h1>
+        <p class="text-gray-400 mt-2">IoT Monitoring Platform</p>
+      </div>
+
+      <div>
+        <!-- Estado del sistema -->
+        <div class="card rounded-2xl p-4 mb-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-400">Estado del sistema</p>
+              <h2 class="text-green-400 font-bold">ONLINE</h2>
+            </div>
+            <div class="status-dot bg-green-400 animate-pulse"></div>
+          </div>
+        </div>
+
+        <!-- Botón logout -->
+        <button onclick="logout()"
+          class="w-full bg-red-500 hover:bg-red-400 transition-all py-3 rounded-xl font-bold">
+          <i class="fa-solid fa-right-from-bracket mr-2"></i>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="flex-1 p-6">
+
+      <!-- HEADER -->
+      <div class="flex flex-col xl:flex-row xl:justify-between xl:items-center gap-6 mb-8">
+        <div>
+          <h1 class="text-5xl font-bold">Solar Tracker Dashboard</h1>
+          <p class="text-gray-400 mt-2">Plataforma de monitoreo energético histórico</p>
+        </div>
+
+        <div class="flex gap-4 flex-wrap">
+          <!-- Última sincronización -->
+          <div class="card rounded-2xl px-6 py-5">
+            <p class="text-gray-400 text-sm">Última sincronización</p>
+            <h2 class="text-cyan-400 text-2xl font-bold" id="lastSync">--</h2>
+          </div>
+
+          <!-- Botón cambio de modo -->
+          <button id="viewModeBtn" onclick="toggleViewMode()"
+            class="bg-cyan-500 hover:bg-cyan-400 px-6 py-4 rounded-2xl text-black font-bold transition-all shadow-lg shadow-cyan-500/20">
+            MODO: PROMEDIOS
+          </button>
+        </div>
+      </div>
+
+      <!-- METRICS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div class="card rounded-3xl p-6">
+          <p class="text-gray-400">Intensidad Solar Máxima</p>
+          <h2 class="text-5xl font-bold text-yellow-400 mt-4"><span id="solarMetric">--</span></h2>
+          <p class="mt-2 text-sm text-gray-500">W/m²</p>
+        </div>
+
+        <div class="card rounded-3xl p-6">
+          <p class="text-gray-400">Corriente Máxima Registrada</p>
+          <h2 class="text-5xl font-bold text-cyan-400 mt-4"><span id="currentMetric">--</span></h2>
+        </div>
+
+        <div class="card rounded-3xl p-6">
+          <p class="text-gray-400">Nivel Máximo de Batería</p>
+          <h2 class="text-5xl font-bold text-green-400 mt-4"><span id="batteryMetric">--</span></h2>
+        </div>
+
+        <div class="card rounded-3xl p-6">
+          <p class="text-gray-400">Posición Horizontal Máxima</p>
+          <h2 class="text-5xl font-bold mt-4"><span id="servoHMetric">--</span></h2>
+        </div>
+
+        <div class="card rounded-3xl p-6">
+          <p class="text-gray-400">Posición Vertical Máxima</p>
+          <h2 class="text-5xl font-bold mt-4"><span id="servoVMetric">--</span></h2>
+        </div>
+
+        <div class="card rounded-3xl p-6">
+          <p class="text-gray-400">Eficiencia Máxima</p>
+          <h2 class="text-5xl font-bold text-purple-400 mt-4"><span id="efficiencyMetric">--</span></h2>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
+        <div class="card rounded-3xl p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold">Producción Energética</h2>
+            <button onclick="downloadChart('energyChart')"
+              class="bg-cyan-500 hover:bg-cyan-400 px-4 py-2 rounded-xl text-black font-bold">PNG</button>
+          </div>
+          <canvas id="energyChart"></canvas>
+        </div>
+
+        <div class="card rounded-3xl p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold">Tracker vs Panel Fijo</h2>
+            <button onclick="downloadChart('compareChart')"
+              class="bg-purple-500 hover:bg-purple-400 px-4 py-2 rounded-xl font-bold">PNG</button>
+          </div>
+          <canvas id="compareChart"></canvas>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="card rounded-3xl p-6 mt-8">
+        <div class="flex flex-col gap-4 mb-6">
+          <h2 class="text-3xl font-bold">Historial del Sistema</h2>
+          <select id="syncFilter" onchange="filterData()"
+            class="bg-black/30 border border-cyan-500/30 rounded-xl px-4 py-3 text-white mt-4 w-full md:w-72">
+            <option value="ALL">Todas las sincronizaciones</option>
+            <option value="GENERAL">General</option>
+            <option value="MAXIMA">Máxima eficiencia</option>
+            <option value="NOCTURNO">Uso nocturno</option>
+            <option value="ULTIMA">Última sincronización</option>
+          </select>
+          <button onclick="exportCSV()"
+            class="bg-cyan-500 hover:bg-cyan-400 px-5 py-3 rounded-xl font-bold text-black w-fit">
+            <i class="fa-solid fa-download mr-2"></i> Exportar CSV
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[900px]">
+            <thead>
+              <tr class="border-b border-white/10 text-cyan-
+
+                            <tr class="border-b border-white/10 text-cyan-400">
+                <th class="p-4 text-left">Fecha</th>
+                <th class="p-4 text-left">Solar</th>
+                <th class="p-4 text-left">Corriente</th>
+                <th class="p-4 text-left">Batería</th>
+                <th class="p-4 text-left">Servo H</th>
+                <th class="p-4 text-left">Servo V</th>
+                <th class="p-4 text-left">Eficiencia</th>
+                <th class="p-4 text-left">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script principal del dashboard -->
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

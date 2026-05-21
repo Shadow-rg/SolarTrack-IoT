@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarTrack IoT</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    body {
+      background: #050816;
+      overflow: hidden;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.1);
+    }
+
+    .glow {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    }
+
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+  </style>
+</head>
+
+<body class="bg-grid flex items-center justify-center min-h-screen text-white">
+
+  <!-- Background Glow -->
+  <div class="absolute w-96 h-96 bg-cyan-500 rounded-full blur-[120px] opacity-20 top-0 left-0"></div>
+  <div class="absolute w-96 h-96 bg-blue-500 rounded-full blur-[120px] opacity-20 bottom-0 right-0"></div>
+
+  <!-- Login -->
+  <div class="glass rounded-3xl p-10 w-[90%] max-w-md z-10">
+
+    <div class="text-center mb-8">
+      <div class="text-6xl mb-4 text-cyan-400">
+        <i class="fa-solid fa-solar-panel"></i>
+      </div>
+      <h1 class="text-4xl font-bold">SolarTrack IoT</h1>
+      <p class="text-gray-400 mt-2">Sistema Inteligente de Seguimiento Solar</p>
+      <p class="text-cyan-400 text-sm mt-2">Ingeniería Informática · Universidad de Guadalajara</p>
+    </div>
+
+    <form class="space-y-5" onsubmit="event.preventDefault(); login();">
+      <!-- Usuario -->
+      <div>
+        <label class="text-sm text-gray-400">Usuario</label>
+        <div class="relative mt-2">
+          <i class="fa-solid fa-user absolute left-4 top-4 text-cyan-400"></i>
+          <input type="text" id="username" placeholder="Ingrese usuario"
+            class="w-full bg-black/30 border border-cyan-500/30 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-cyan-400">
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="text-sm text-gray-400">Contraseña</label>
+        <div class="relative mt-2">
+          <i class="fa-solid fa-lock absolute left-4 top-4 text-cyan-400"></i>
+          <input type="password" id="password" placeholder="Ingrese contraseña"
+            class="w-full bg-black/30 border border-cyan-500/30 rounded-xl py-3 pl-12 pr-4 outline-none focus:border-cyan-400">
+        </div>
+      </div>
+
+      <div class="pt-4">
+        <button type="submit"
+          class="w-full bg-cyan-500 hover:bg-cyan-400 transition-all duration-300 py-3 rounded-xl font-bold text-black glow">
+          ACCEDER AL SISTEMA
+        </button>
+      </div>
+
+      <div id="errorMessage" class="hidden text-center text-red-400 text-sm">
+        Credenciales incorrectas
+      </div>
+    </form>
+
+    <div class="mt-8 text-center text-xs text-gray-500">
+      Secure IoT Monitoring Platform v1.0
+    </div>
+  </div>
+
+  <!-- Script de autenticación -->
+  <script src="js/auth.js"></script>
+</body>
+</html>
